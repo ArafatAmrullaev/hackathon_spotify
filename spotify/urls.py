@@ -6,7 +6,7 @@ router = DefaultRouter()
 router.register('artists', ArtistViewSet)
 router2 = DefaultRouter()
 router2.register('songs', SongViewSet)
-router3 = DefaultRouter
+router3 = DefaultRouter()
 router3.register('albums', AlbumViewSet)
 
 urlpatterns = [
