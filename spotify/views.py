@@ -15,7 +15,7 @@ class SongViewSet(ModelViewSet, GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-class AlbumSerializer(ModelViewSet, GenericViewSet):
+class AlbumViewSet(ModelViewSet, GenericViewSet):
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]
