@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'spotify',
-        'USER': 'arafat',
+        'USER': 'zakir',
         'PASSWORD': '1',
         'HOST': 'localhost',
         'PORT': '5432'
