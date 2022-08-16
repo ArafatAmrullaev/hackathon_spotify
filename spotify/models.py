@@ -53,4 +53,9 @@ class Like(models.Model):
     user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
     album = models.ForeignKey(Album, related_name='likes', on_delete=models.CASCADE)
 
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User, related_name='favourite', on_delete=models.CASCADE)
+    song = models.ForeignKey(Song, related_name='favourite', on_delete=models.CASCADE)
+
     
