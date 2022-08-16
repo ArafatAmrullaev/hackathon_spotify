@@ -52,3 +52,5 @@ class Comment(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
     album = models.ForeignKey(Album, related_name='likes', on_delete=models.CASCADE)
+
+    
