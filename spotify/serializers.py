@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from .models import Artist, Song, Album, Comment, Rating, Like
+from .models import Artist, Favourite, Song, Album, Comment, Rating, Like
 
 
 class ArtistSerializer(serializers.ModelSerializer):
@@ -13,6 +13,13 @@ class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
         fields = '__all__'
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['added_to_favourite'] = False
+        request = self.context.get('request')
+        if request.user.is_authenticated:
+            rep['added_to_favourite'] = Favourite.objects.filter(user=request.user, song=instance).exists()
+        return rep
 
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,9 +36,9 @@ class AlbumSerializer(serializers.ModelSerializer):
         
         request = self.context.get('request')
         if request.user.is_authenticated:
-            rep['liked_by_user'] = Like.objects.filter(user=request.user, product=instance).exists()
-            if Rating.objects.filter(user=request.user, product=instance).exists():
-                rating = Rating.objects.get(user=request.user, product=instance)
+            rep['liked_by_user'] = Like.objects.filter(user=request.user, album=instance).exists()
+            if Rating.objects.filter(user=request.user, album=instance).exists():
+                rating = Rating.objects.get(user=request.user, album=instance)
                 rep['user_rating'] = rating.value
 
         return rep
@@ -51,3 +58,8 @@ class CommentSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep['user'] = instance.user.email
         return rep
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favourite
+        exclude = ('user', )

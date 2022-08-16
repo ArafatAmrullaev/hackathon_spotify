@@ -1,15 +1,16 @@
+from urllib import request
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .serializers import ArtistSerializer, SongSerializer, AlbumSerializer
-from .models import Artist, Song, Album, Rating, Comment, Like
+from .serializers import ArtistSerializer, SongSerializer, AlbumSerializer, FavouriteSerializer
+from .models import Artist, Song, Album, Rating, Comment, Like, Favourite
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthor
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from rest_framework import filters
+from rest_framework import filters, mixins
 
 class ArtistViewSet(ModelViewSet, GenericViewSet):
     queryset = Artist.objects.all()
@@ -110,3 +111,22 @@ def add_rating(request, a_id):
 
 
 
+@api_view(['GET'])
+def add_to_favourite(request, s_id):
+    user = request.user
+    song = get_object_or_404(Song, id=s_id)
+
+    if Favourite.objects.filter(user=user, song=song).exists():
+        Favourite.objects.filter(user=user, song=song).delete()
+    else:
+        Favourite.objects.create(user=user, song=song)
+
+    return Response('Added to Favourite', 200)
+
+class FavouriteViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = Favourite.objects.all()
+    serializer_class = FavouriteSerializer
+
+    def filter_queryset(self, queryset):
+        new_queryset = queryset.filter(user=self.request.user)
+        return new_queryset
