@@ -7,23 +7,71 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from .permissions import IsAdminOrReadOnly
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework import filters
 
 class ArtistViewSet(ModelViewSet, GenericViewSet):
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['name']
+
+
+    @swagger_auto_schema(manual_parameters=[openapi.Parameter('name', openapi.IN_QUERY, 'search artist by name', type=openapi.TYPE_STRING)])
+    @action(methods=["GET"], detail=False)
+    def search(self, request,):
+        name = request.query_params.get("name")
+        queryset = self.get_queryset()
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+
+        serializer = ArtistSerializer(queryset, many=True, context={'request':request})
+        return Response(serializer.data, 200)
 
 
 class SongViewSet(ModelViewSet, GenericViewSet):
     queryset = Song.objects.all()
     serializer_class = SongSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'artist']
+
+
+    @swagger_auto_schema(manual_parameters=[openapi.Parameter('title', openapi.IN_QUERY, 'search song by title', type=openapi.TYPE_STRING)])
+    @action(methods=["GET"], detail=False)
+    def search(self, request,):
+        title = request.query_params.get("title")
+        queryset = self.get_queryset()
+
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+
+        serializer = SongSerializer(queryset, many=True, context={'request':request})
+        return Response(serializer.data, 200)
 
 
 class AlbumViewSet(ModelViewSet, GenericViewSet):
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['title', 'genre', 'artist']
+
+
+    @swagger_auto_schema(manual_parameters=[openapi.Parameter('title', openapi.IN_QUERY, 'search album by title', type=openapi.TYPE_STRING)])
+    @action(methods=["GET"], detail=False)
+    def search(self, request,):
+        title = request.query_params.get("title")
+        queryset = self.get_queryset()
+
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+
+        serializer = AlbumSerializer(queryset, many=True, context={'request':request})
+        return Response(serializer.data, 200)
 
 
 @api_view(['GET'])
