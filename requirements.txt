@@ -5,7 +5,7 @@ charset-normalizer==2.1.0
 coreapi==2.3.3
 coreschema==0.0.4
 distlib==0.3.5
-Django
+Django==4.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.2.0
 drf-yasg==1.21.3
@@ -19,6 +19,7 @@ MarkupSafe==2.1.1
 packaging==21.3
 Pillow==9.2.0
 pipenv==2022.8.15
+pkg_resources==0.0.0
 platformdirs==2.5.2
 psycopg2-binary==2.9.3
 PyJWT==2.4.0
@@ -33,3 +34,4 @@ uritemplate==4.1.1
 urllib3==1.26.11
 virtualenv==20.16.3
 virtualenv-clone==0.5.7
+whitenoise==6.2.0
