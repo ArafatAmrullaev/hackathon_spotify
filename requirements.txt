@@ -33,6 +33,4 @@ ruamel.yaml.clib==0.2.6
 sqlparse==0.4.2
 uritemplate==4.1.1
 urllib3==1.26.11
-virtualenv==20.16.3
-virtualenv-clone==0.5.7
 whitenoise==6.2.0
