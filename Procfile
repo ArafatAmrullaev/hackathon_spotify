@@ -1,1 +1,1 @@
-python-3.8.10
+web: gunicorn config.wsgi --log-file -
