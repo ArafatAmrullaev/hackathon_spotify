@@ -1,4 +1,5 @@
 from dataclasses import fields
+from multiprocessing import context
 from rest_framework import serializers
 from .models import Artist, Favourite, Song, Album, Comment, Rating, Like
 
@@ -28,7 +29,7 @@ class AlbumSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['artist'] = ArtistSerializer(instance.artist).data
-        rep['songs'] = SongSerializer(instance.song.all(), many=True).data
+        rep['songs'] = SongSerializer(instance.song.all(), many=True, context={'request': request}).data
         rep['likes'] = instance.likes.all().count()
         rep['rating'] = instance.average_rating
         rep['liked_by_user'] = False
