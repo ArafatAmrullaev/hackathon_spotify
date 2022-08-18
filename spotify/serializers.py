@@ -26,15 +26,23 @@ class AlbumSerializer(serializers.ModelSerializer):
         model = Album
         fields = '__all__'
     def to_representation(self, instance):
+        request = self.context.get('request')
+        print("R==>", request)
         rep = super().to_representation(instance)
+        print(1)
         rep['artist'] = ArtistSerializer(instance.artist).data
-        rep['songs'] = SongSerializer(instance.song.all(), many=True).data
+        print(2)
+
+        rep['songs'] = SongSerializer(instance.song.all(), many=True, context={'request': request}).data
+        print(3)
+
         rep['likes'] = instance.likes.all().count()
+        print(4)
         rep['rating'] = instance.average_rating
         rep['liked_by_user'] = False
         rep['user_rating'] = 0
         
-        request = self.context.get('request')
+        
         if request.user.is_authenticated:
             rep['liked_by_user'] = Like.objects.filter(user=request.user, album=instance).exists()
             if Rating.objects.filter(user=request.user, album=instance).exists():

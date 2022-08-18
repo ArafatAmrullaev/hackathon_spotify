@@ -86,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'spotify',
-        'USER': 'zakir',
+        'USER': 'arafat',
         'PASSWORD': '1',
         'HOST': 'localhost',
         'PORT': '5432'
@@ -140,6 +140,9 @@ STATIC_URL = 'static/'
 import os
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Default primary key field type
