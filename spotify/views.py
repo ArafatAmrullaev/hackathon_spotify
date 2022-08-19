@@ -1,7 +1,7 @@
 from urllib import request
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from .serializers import ArtistSerializer, SongSerializer, AlbumSerializer, FavouriteSerializer
+from .serializers import ArtistSerializer, SongSerializer, AlbumSerializer, FavouriteSerializer, CommentSerializer
 from .models import Artist, Song, Album, Rating, Comment, Like, Favourite
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.shortcuts import get_object_or_404
@@ -74,6 +74,15 @@ class AlbumViewSet(ModelViewSet, GenericViewSet):
         serializer = AlbumSerializer(queryset, many=True, context={'request':request})
         return Response(serializer.data, 200)
 
+class CommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.UpdateModelMixin, GenericViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, IsAuthor]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 @api_view(['GET'])
 def toggle_like(request, a_id):
